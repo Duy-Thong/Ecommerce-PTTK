@@ -1,7 +1,9 @@
 package com.javaBTL.BE_JAVA_BTL.model.order;
 
+import com.javaBTL.BE_JAVA_BTL.model.payment.Payment;
 import com.javaBTL.BE_JAVA_BTL.model.shipment.Shipment;
 import com.javaBTL.BE_JAVA_BTL.model.user.User;
+import com.javaBTL.BE_JAVA_BTL.model.discount.Discount;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -27,18 +29,24 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private List<Shipment> shipments = new ArrayList<>();
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+    private Shipment shipment;
 
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+    private Payment payment;
+
+    @ManyToOne
+    @JoinColumn(name = "discount_id")
+    private Discount discount;
+
+    private Double subtotal;
+    private Double discountAmount;
     private Double totalAmount;
+    
     private String shippingAddress;
     private String phoneNumber;
-    private String customerName; // Thêm trường này
-    private String note; // Thêm trường này
-    private String paymentMethod;
-    private String cardNumber;
-    private String cardHolder;
+    private String customerName;
+    private String note;
     private String status = "PENDING";
 
     @Column(name = "created_at")
